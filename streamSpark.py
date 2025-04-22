@@ -5,7 +5,7 @@ import requests
 
 CONFIG = {
     "JSONL_URL": "https://raw.githubusercontent.com/IngEnigma/StreamlitSpark/refs/heads/master/results/male_crimes/data.jsonl",
-    "PRODUCER_URL": "https://kafka-postgres-producer.onrender.com/send-crimes",
+    "PRODUCER_URL": "https://kafka-postgres-producer-lyx5.onrender.com/send-crimes",
     "PRODUCER_AREA_URL": "https://kafka-mongo-producer.onrender.com/send-areas",
     "GITHUB_REPO_DEFAULT": "Streamlit_Spark",
     "GITHUB_USER_DEFAULT": "IngEnigma",
