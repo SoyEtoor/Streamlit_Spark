@@ -10,7 +10,7 @@ CONFIG = {
     "GITHUB_REPO_DEFAULT": "Streamlit_Spark",
     "GITHUB_USER_DEFAULT": "SoyEtoor",
     "COLLECTION_NAME": "people",
-    "DB_NAME": "BigData"
+    "DB_NAME": "people"
 }
 
 def send_request(url, headers, payload):
