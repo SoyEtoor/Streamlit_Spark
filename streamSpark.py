@@ -58,20 +58,60 @@ def process_crimes_to_kafka():
 
 def get_data_from_postgres():
     try:
-        conn = st.connection("neon", type="sql")
-        query = "SELECT * FROM crimes;"
-        df = conn.query(query, ttl=600)
-
-        st.success("✅ Datos obtenidos correctamente desde PostgreSQL 🐘")
-        st.dataframe(df)
-
-        st.subheader("📊 Métricas de los datos")
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Total registros", len(df))
-        col2.metric("Edad promedio víctimas", round(df['victim_age'].mean(), 1))
-        col3.metric("Tipos de crimen", df['crm_cd_desc'].nunique())
+        with st.spinner("🔌 Conectando a PostgreSQL..."):
+            # Verificar si la conexión está configurada
+            if "neon" not in st.secrets:
+                st.error("❌ Configuración 'neon' no encontrada en secrets")
+                return
+                
+            # Establecer conexión con timeout
+            conn = st.connection("neon", type="sql")
+            
+            # Verificar si la tabla existe
+            table_exists = conn.query(
+                "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'crimes');",
+                ttl=600
+            ).iloc[0,0]
+            
+            if not table_exists:
+                st.error("❌ La tabla 'crimes' no existe en la base de datos")
+                return
+                
+            # Obtener datos con límite para pruebas
+            query = "SELECT * FROM crimes LIMIT 1000;"
+            df = conn.query(query, ttl=600)
+            
+            if df.empty:
+                st.warning("⚠️ La tabla 'crimes' está vacía")
+                return
+                
+            # Mostrar datos
+            st.success(f"✅ Obtenidos {len(df)} registros desde PostgreSQL 🐘")
+            st.dataframe(df)
+            
+            # Mostrar métricas
+            st.subheader("📊 Métricas de los datos")
+            cols = st.columns(3)
+            
+            # Total registros
+            cols[0].metric("Total registros", len(df))
+            
+            # Métricas condicionales
+            if 'victim_age' in df.columns:
+                avg_age = round(df['victim_age'].mean(), 1)
+                cols[1].metric("Edad promedio víctimas", avg_age)
+            else:
+                cols[1].warning("No hay datos de edad")
+                
+            if 'crm_cd_desc' in df.columns:
+                unique_crimes = df['crm_cd_desc'].nunique()
+                cols[2].metric("Tipos de crimen", unique_crimes)
+            else:
+                cols[2].warning("No hay datos de tipos de crimen")
+                
     except Exception as e:
-        st.error(f"⚠️ Error al conectar con la base de datos: {str(e)}")
+        st.error(f"❌ Error crítico: {str(e)}")
+        st.exception(e)  # Muestra el traceback completo
 
 def process_area_to_kafka():
     st.spinner('🚀 Enviando datos de áreas al producer de Kafka...')
