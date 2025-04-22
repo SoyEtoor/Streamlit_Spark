@@ -9,7 +9,7 @@ CONFIG = {
     "PRODUCER_AREA_URL": "https://kafka-mongo-producer-s73g.onrender.com/send-areas",
     "GITHUB_REPO_DEFAULT": "Streamlit_Spark",
     "GITHUB_USER_DEFAULT": "SoyEtoor",
-    "COLLECTION_NAME": "BigData",
+    "COLLECTION_NAME": "people",
     "DB_NAME": "BigData"
 }
 
