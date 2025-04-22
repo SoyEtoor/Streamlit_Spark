@@ -61,7 +61,7 @@ def get_data_from_postgres():
         with st.spinner("🔌 Conectando a PostgreSQL..."):
             # Verificar si la conexión está configurada
             if "postgres" not in st.secrets:
-                st.error("❌ Configuración 'neon' no encontrada en secrets")
+                st.error("❌ Configuración 'postgres' no encontrada en secrets")
                 return
                 
             # Establecer conexión con timeout
