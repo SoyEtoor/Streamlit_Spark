@@ -8,7 +8,7 @@ CONFIG = {
     "PRODUCER_URL": "https://kafka-postgres-producer-lyx5.onrender.com/send-crimes",
     "PRODUCER_AREA_URL": "https://kafka-mongo-producer-s73g.onrender.com/send-areas",
     "GITHUB_REPO_DEFAULT": "Streamlit_Spark",
-    "GITHUB_USER_DEFAULT": "IngEnigma",
+    "GITHUB_USER_DEFAULT": "SoyEtoor",
     "COLLECTION_NAME": "BigData",
     "DB_NAME": "BigData"
 }
