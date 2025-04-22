@@ -1,0 +1,48 @@
+name: spark
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  repository_dispatch:
+    types: [spark]
+  workflow_dispatch:
+
+jobs:
+  spark:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: temurin
+    - uses: vemonet/setup-spark@v1
+      with:
+        spark-version: '3.5.3'
+        hadoop-version: '3'
+    - run: spark-submit --version
+    - name: Download dataset
+      run: wget -O crime.csv ${{github.event.client_payload.dataseturl}}
+    - name: Download crime.py
+      run: wget -O crime.py ${{github.event.client_payload.codeurl}}
+    - run: ls -la
+    - run: spark-submit --master local crime.py crime.csv
+    - run: ls -la
+    - run: ls -la results
+    - name: GIT commit and push docs
+      env: 
+        CI_COMMIT_MESSAGE: save spark results
+        CI_COMMIT_AUTHOR: IngEnigma 
+      run: |
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "zs22019956@estudiantes.uv.mx"
+        git add .
+        git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
+        git push
