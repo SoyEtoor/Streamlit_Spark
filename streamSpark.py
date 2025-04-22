@@ -60,12 +60,12 @@ def get_data_from_postgres():
     try:
         with st.spinner("🔌 Conectando a PostgreSQL..."):
             # Verificar si la conexión está configurada
-            if "postgres" not in st.secrets:
-                st.error("❌ Configuración 'postgres' no encontrada en secrets")
-                return
+            #if "postgres" not in st.secrets:
+             #   st.error("❌ Configuración 'postgres' no encontrada en secrets")
+              #  return
                 
             # Establecer conexión con timeout
-            conn = st.connection("postgres", type="sql")
+            conn = st.connection("postgresql", type="sql")
             
             # Verificar si la tabla existe
             table_exists = conn.query(
